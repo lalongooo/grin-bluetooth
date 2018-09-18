@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    // Load properties defined in the file 'dependencies.gradle'
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+
+    defaultConfig {
+        applicationId globalConfiguration["androidApplicationId"]
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        versionCode globalConfiguration["androidVersionCode"]
+        versionName globalConfiguration["androidVersionName"]
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+
+    def appDependencies = rootProject.ext.appDependencies
+    def appTestDependencies = rootProject.ext.appTestDependencies
+
+    implementation project(':presentation')
+    implementation project(':data')
+    implementation project(':cache')
+    implementation project(':remote')
+
+    implementation appDependencies.javaxAnnotation
+    implementation appDependencies.kotlin
+    implementation appDependencies.javaxInject
+    implementation appDependencies.rxKotlin
+    implementation appDependencies.androidAnnotations
+    implementation appDependencies.androidSupportV4
+    implementation appDependencies.androidSupportV13
+    implementation appDependencies.appCompatV7
+    implementation appDependencies.supportRecyclerView
+    implementation appDependencies.supportDesign
+    implementation appDependencies.constraintLayout
+    implementation appDependencies.rxAndroid
+    implementation appDependencies.picasso
+    implementation appDependencies.dagger
+    implementation appDependencies.daggerSupport
+
+    kapt appDependencies.daggerCompiler
+    kapt appDependencies.daggerProcessor
+    // compileOnly appDependencies.glassfishAnnotation
+
+    testImplementation appTestDependencies.junit
+    androidTestImplementation appTestDependencies.supportRunner
+    androidTestImplementation appTestDependencies.espressoCore
+}

@@ -1,0 +1,89 @@
+ext {
+
+    androidCompileSdkVersion = 28
+    androidApplicationId = "com.ongrin.android.grinbluetooth"
+    androidMinSdkVersion = 16
+    androidTargetSdkVersion = 28
+    androidVersionCode = 1
+    androidVersionName = "1.0.0"
+
+    //Libraries
+    kotlinVersion = "1.2.50"
+    rxKotlinVersion = "2.3.0"
+    rxAndroidVersion = "2.1.0"
+    rxjava2Version = "2.2.2"
+    javaxAnnotationVersion = "1.0"
+    javaxInjectVersion = "1"
+    gsonVersion = "2.8.5"
+    okHttpVersion = "3.8.1"
+    androidAnnotationsVersion = "21.0.3"
+    retrofitVersion = "2.3.0"
+    roomVersion = "1.1.1"
+    supportLibraryVersion = "27.1.1"
+    constraintLayoutVersion = "1.1.0"
+    picassoVersion = "2.5.2"
+    daggerVersion = "2.17"
+    glassfishAnnotationVersion = "10.0-b28"
+
+    //Testing
+
+    jUnitVersion = "4.12"
+    mockitoKotlinVersion = '1.5.0'
+    robolectricVersion = "3.4.2"
+
+    assertJVersion = "3.8.0"
+    mockitoVersion = "1.9.5"
+    dexmakerVersion = "1.0"
+    espressoVersion = "3.0.2"
+    testingSupportLibVersion = "0.1"
+    mockitoKotlinVersion = "1.5.0"
+    mockitoAndroidVersion = "2.8.47"
+    androidSupportRunnerVersion = "1.0.2"
+    androidSupportRulesVersion = "1.0.0"
+    dexmakerMockitoversion = "2.2.0"
+    runnerVersion = "0.5"
+
+    appDependencies = [
+            javaxAnnotation    : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            kotlin             : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            javaxInject        : "javax.inject:javax.inject:${javaxInjectVersion}",
+            rxKotlin           : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            androidAnnotations : "com.android.support:support-annotations:${supportLibraryVersion}",
+            androidSupportV4   : "com.android.support:support-v4:${supportLibraryVersion}",
+            androidSupportV13  : "com.android.support:support-v13:${supportLibraryVersion}",
+            appCompatV7        : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            supportRecyclerView: "com.android.support:recyclerview-v7:${supportLibraryVersion}",
+            supportDesign      : "com.android.support:design:${supportLibraryVersion}",
+            constraintLayout   : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            rxAndroid          : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+            rxJava2            : "io.reactivex.rxjava2:rxjava:${rxjava2Version}",
+            picasso            : "com.squareup.picasso:picasso:${picassoVersion}",
+            dagger             : "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport      : "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerCompiler     : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            daggerProcessor    : "com.google.dagger:dagger-android-processor:${daggerVersion}",
+            glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
+    ]
+
+    appTestDependencies = [
+            junit        : "junit:junit:${jUnitVersion}",
+            supportRunner: "com.android.support.test:runner:${androidSupportRunnerVersion}",
+            espressoCore : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+    ]
+
+    cacheDependencies = [
+
+            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
+            rxKotlin       : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+    ]
+
+    cacheTestDependencies = [
+            junit      : "junit:junit:${jUnitVersion}",
+            kotlinJUnit: "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
+            mockito    : "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
+            robolectric: "org.robolectric:robolectric:${robolectricVersion}",
+    ]
+
+}
