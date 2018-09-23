@@ -44,8 +44,10 @@ class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemCount(): Int = deviceList.size
 
     fun add(item: Device) {
-        deviceList.add(item)
-        notifyItemInserted(deviceList.size - 1)
+        if (deviceList.none { it.address == item.address }) {
+            deviceList.add(item)
+            notifyItemInserted(deviceList.size - 1)
+        }
     }
 
     fun clear() {

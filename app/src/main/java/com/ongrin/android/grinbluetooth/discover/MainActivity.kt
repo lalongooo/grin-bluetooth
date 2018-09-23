@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
                             deviceName,
                             deviceAddress,
                             deviceSignalStrength.toString()))
+                    Log.d("GrinBT", "Bluetooth device found. MacAddress: $deviceAddress, Name: $deviceName, RSSI: $deviceSignalStrength")
                 }
 
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
