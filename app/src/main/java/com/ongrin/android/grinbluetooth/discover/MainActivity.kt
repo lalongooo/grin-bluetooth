@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
 import com.ongrin.presentation.discover.HomeScreenContract
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
     @Inject
     lateinit var mPermissionsManager: PermissionsManager
 
+    private var devicesFound = false
     private var deviceListAdapter: DeviceListAdapter = DeviceListAdapter()
 
     private val REQUEST_CODE_ENABLE_BT = 1001
@@ -50,8 +52,6 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.searching_devices, Snackbar.LENGTH_SHORT)
-                        .show()
                 startBluetoothDiscovery()
             } else {
                 disableBluetoothFeature()
@@ -123,8 +123,11 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
 
         val discoveryStarted = bluetoothAdapter.startDiscovery()
         if (discoveryStarted) {
+            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.searching_devices, Snackbar.LENGTH_SHORT)
+                    .show()
             deviceListAdapter.clear()
             swipeRefreshLayout.isRefreshing = true
+            layoutNoDevices.visibility = View.GONE
         }
     }
 
@@ -139,6 +142,7 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
                     val deviceName = intent.getStringExtra(BluetoothDevice.EXTRA_NAME)
                     val deviceAddress = device.address // MAC address
                     val deviceSignalStrength = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE)
+                    devicesFound = true
                     deviceListAdapter.add(Device(
                             deviceName,
                             deviceAddress,
@@ -154,6 +158,10 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
                     if (swipeRefreshLayout.isRefreshing) {
                         swipeRefreshLayout.isRefreshing = false
                     }
+                    if (!devicesFound) {
+                        layoutNoDevices.visibility = View.VISIBLE
+                    }
+                    devicesFound = false
                 }
             }
         }
