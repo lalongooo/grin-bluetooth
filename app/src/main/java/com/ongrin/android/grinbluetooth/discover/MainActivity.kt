@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
     @Inject
     lateinit var mPermissionsManager: PermissionsManager
 
+    private var deviceListAdapter: DeviceListAdapter = DeviceListAdapter()
+
     private val REQUEST_CODE_ENABLE_BT = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        setupUi()
         startBluetooth()
     }
 
@@ -76,8 +80,13 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
         this.mPresenter = presenter
     }
 
-    private fun startBluetooth() {
+    private fun setupUi() {
+        swipeRefreshLayout.setOnRefreshListener { startBluetooth() }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = deviceListAdapter
+    }
 
+    private fun startBluetooth() {
         if (mPermissionsManager.isLocationPermissionGranted()) {
             // Check for bluetooth availability on the device
             val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -99,13 +108,11 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
     }
 
     private fun startBluetoothDiscovery() {
-
         val intentFilter = IntentFilter()
         intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         registerReceiver(mReceiver, intentFilter)
-
 
         val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
@@ -115,7 +122,10 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
         }
 
         val discoveryStarted = bluetoothAdapter.startDiscovery()
-        Log.d("GrinBT", "bluetoothAdapter.startDiscovery  = $discoveryStarted")
+        if (discoveryStarted) {
+            deviceListAdapter.clear()
+            swipeRefreshLayout.isRefreshing = true
+        }
     }
 
     private val mReceiver = object : BroadcastReceiver() {
@@ -124,14 +134,15 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
             val action = intent.action
             when (action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
-                    val device: BluetoothDevice =
-                            intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    // Discovery has found a device. Get the BluetoothDevice object and its info from the Intent.
+                    val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                     val deviceName = intent.getStringExtra(BluetoothDevice.EXTRA_NAME)
-                    val deviceHardwareAddress = device.address // MAC address
+                    val deviceAddress = device.address // MAC address
                     val deviceSignalStrength = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE)
-                    Log.d("GrinBT", "Bluetooth device found. Name: $deviceName, MacAddress: $deviceHardwareAddress, RSSI: $deviceSignalStrength")
+                    deviceListAdapter.add(Device(
+                            deviceName,
+                            deviceAddress,
+                            deviceSignalStrength.toString()))
                 }
 
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
@@ -139,6 +150,9 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     Log.d("GrinBT", "Bluetooth discovery finished")
+                    if (swipeRefreshLayout.isRefreshing) {
+                        swipeRefreshLayout.isRefreshing = false
+                    }
                 }
             }
         }
