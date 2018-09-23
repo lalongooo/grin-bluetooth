@@ -4,5 +4,5 @@
     <dimen name="device_list_name_text_size">20sp</dimen>
     <dimen name="device_list_info_text_size">12sp</dimen>
     <dimen name="device_list_info_margin">8dp</dimen>
-    <dimen name="device_list_item_margin">4dp</dimen>
+    <dimen name="device_list_item_margin">16dp</dimen>
 </resources>

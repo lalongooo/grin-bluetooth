@@ -24,10 +24,13 @@
             android:id="@+id/deviceName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/device_list_item_margin"
+            android:layout_marginLeft="@dimen/device_list_item_margin"
+            android:layout_marginStart="@dimen/device_list_item_margin"
             android:textSize="@dimen/device_list_name_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/deviceAddress"
             app:layout_constraintStart_toEndOf="@+id/bluetoothIcon"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
             tools:text="AWESOME BLUETOOTH DEVICE" />
 
         <TextView
@@ -63,5 +66,18 @@
             app:layout_constraintStart_toEndOf="@+id/deviceSignalStrength"
             app:layout_constraintTop_toTopOf="@+id/deviceAddress"
             tools:text="Created on Jan 18 2018 at 12:34" />
+
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/device_list_item_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_add"
+            tools:ignore="ContentDescription" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

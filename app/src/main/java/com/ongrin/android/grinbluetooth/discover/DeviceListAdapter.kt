@@ -1,9 +1,12 @@
 package com.ongrin.android.grinbluetooth.discover
 
 import android.databinding.DataBindingUtil
+import android.os.Handler
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.common.AdapterClickListener
 import com.ongrin.android.grinbluetooth.databinding.RecyclerViewDeviceListItemBinding
@@ -39,6 +42,17 @@ class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         deviceViewHolder.mBinding.deviceAddress.text = device.address
         deviceViewHolder.mBinding.deviceSignalStrength.text = device.signalStrength
         deviceViewHolder.mBinding.deviceCreationDate.text = if (device.creationDate == null) "" else device.creationDate?.toSimpleString()
+        deviceViewHolder.mBinding.btnSave.setImageResource(R.drawable.ic_add)
+        deviceViewHolder.mBinding.btnSave.setOnClickListener { button ->
+            val imageButton = button as ImageButton
+            Log.d("GrinBT", "Saving ${device.name} with address: ${device.address}...")
+            imageButton.isEnabled = false
+            imageButton.setImageResource(R.drawable.ic_add_pressed)
+            Handler().postDelayed({
+                imageButton.isEnabled = true
+                imageButton.setImageResource(R.drawable.ic_check)
+            }, 1000)
+        }
     }
 
     override fun getItemCount(): Int = deviceList.size
