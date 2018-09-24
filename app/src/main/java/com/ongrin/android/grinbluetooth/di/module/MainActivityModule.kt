@@ -4,8 +4,10 @@ import android.app.Application
 import com.ongrin.android.grinbluetooth.di.scope.ActivityScope
 import com.ongrin.android.grinbluetooth.discover.MainActivity
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
+import com.ongrin.domain.device.interactor.AddDevice
 import com.ongrin.presentation.discover.HomeScreenContract
 import com.ongrin.presentation.discover.HomeScreenPresenter
+import com.ongrin.presentation.discover.mapper.DeviceMapper
 import dagger.Module
 import dagger.Provides
 
@@ -20,8 +22,8 @@ open class MainActivityModule {
 
     @ActivityScope
     @Provides
-    fun provideHomeScreenPresenter(view: HomeScreenContract.View): HomeScreenContract.Presenter {
-        return HomeScreenPresenter(view)
+    fun provideHomeScreenPresenter(view: HomeScreenContract.View, addDevice: AddDevice, mapper: DeviceMapper): HomeScreenContract.Presenter {
+        return HomeScreenPresenter(view, addDevice, mapper)
     }
 
     @ActivityScope
