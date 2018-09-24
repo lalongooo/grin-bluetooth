@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
     }
 
     override fun onDeviceAdd(view: View, position: Int, model: DeviceModelView) {
-        Log.d("GrinBT", "Saving ${model.name} with address: ${model.address}...")
         mPresenter.addDevice(deviceMapper.mapFromView(model))
     }
 
@@ -104,6 +103,10 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
         swipeRefreshLayout.setOnRefreshListener { startBluetooth() }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = deviceListAdapter
+
+        fab.setOnClickListener {
+            Log.d("GrinBT", "Bo to remote device list")
+        }
     }
 
     private fun startBluetooth() {
