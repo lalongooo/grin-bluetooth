@@ -3,8 +3,9 @@ package com.ongrin.remote.device.mapper
 import com.ongrin.data.device.model.DeviceEntity
 import com.ongrin.remote.BaseEntityMapper
 import com.ongrin.remote.device.model.DeviceModel
+import javax.inject.Inject
 
-class DeviceEntityMapper : BaseEntityMapper<DeviceModel, DeviceEntity> {
+class DeviceEntityMapper @Inject constructor() : BaseEntityMapper<DeviceModel, DeviceEntity> {
     override fun mapToRemote(type: DeviceEntity): DeviceModel {
         return DeviceModel(
                 type.id,
