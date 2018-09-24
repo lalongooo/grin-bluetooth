@@ -1,33 +1,19 @@
 package com.ongrin.android.grinbluetooth.discover
 
 import android.databinding.DataBindingUtil
-import android.os.Handler
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import com.ongrin.android.grinbluetooth.R
-import com.ongrin.android.grinbluetooth.common.AdapterClickListener
 import com.ongrin.android.grinbluetooth.databinding.RecyclerViewDeviceListItemBinding
 import com.ongrin.android.grinbluetooth.extensions.toSimpleString
+import com.ongrin.presentation.discover.model.DeviceModelView
 import java.util.*
 
-data class Device(
-        var name: String?,
-        var address: String?,
-        var signalStrength: String?,
-        var creationDate: Date? = null) {
-    init {
-        name = name ?: "Unnamed device"
-        address = address ?: "Unknown address"
-        signalStrength = signalStrength ?: "No signal strength"
-    }
-}
-
-class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val deviceList: ArrayList<Device> = ArrayList()
-    private lateinit var listener: AdapterClickListener<Device>
+class DeviceListAdapter constructor(private val listener: ClickListener<DeviceModelView>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val deviceList: ArrayList<DeviceModelView> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -43,25 +29,34 @@ class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         deviceViewHolder.mBinding.deviceSignalStrength.text = device.signalStrength
         deviceViewHolder.mBinding.deviceCreationDate.text = if (device.creationDate == null) "" else device.creationDate?.toSimpleString()
         deviceViewHolder.mBinding.btnSave.setImageResource(R.drawable.ic_add)
+
+        if (device.id != null) {
+            deviceViewHolder.mBinding.btnSave.isEnabled = true
+            deviceViewHolder.mBinding.btnSave.setImageResource(R.drawable.ic_check)
+        }
+
         deviceViewHolder.mBinding.btnSave.setOnClickListener { button ->
             val imageButton = button as ImageButton
-            Log.d("GrinBT", "Saving ${device.name} with address: ${device.address}...")
-            imageButton.isEnabled = false
             imageButton.setImageResource(R.drawable.ic_add_pressed)
-            Handler().postDelayed({
-                imageButton.isEnabled = true
-                imageButton.setImageResource(R.drawable.ic_check)
-            }, 1000)
+            listener.onDeviceAdd(button, position, device)
         }
     }
 
     override fun getItemCount(): Int = deviceList.size
 
-    fun add(item: Device) {
+    fun add(item: DeviceModelView) {
         if (deviceList.none { it.address == item.address }) {
             deviceList.add(item)
             notifyItemInserted(deviceList.size - 1)
         }
+    }
+
+    fun updateDeviceStatus(device: DeviceModelView) {
+        val index = deviceList.indexOfFirst {
+            it.address == device.address
+        }
+        deviceList[index] = device
+        notifyItemChanged(index)
     }
 
     fun clear() {
@@ -69,10 +64,12 @@ class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun setAdapterClickListener(adapterClickListener: AdapterClickListener<Device>) {
-        listener = adapterClickListener
-    }
-
     private class DeviceListItemViewHolder internal constructor(
-            var mBinding: RecyclerViewDeviceListItemBinding) : RecyclerView.ViewHolder(mBinding.root)
+            var mBinding: RecyclerViewDeviceListItemBinding
+    ) : RecyclerView.ViewHolder(mBinding.root)
+
+    interface ClickListener<T> {
+        fun onDeviceSelected(view: View, position: Int, model: T)
+        fun onDeviceAdd(view: View, position: Int, model: T)
+    }
 }

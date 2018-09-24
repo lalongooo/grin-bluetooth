@@ -16,12 +16,16 @@ import android.util.Log
 import android.view.View
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
+import com.ongrin.domain.device.model.Device
 import com.ongrin.presentation.discover.HomeScreenContract
+import com.ongrin.presentation.discover.mapper.DeviceMapper
+import com.ongrin.presentation.discover.model.DeviceModelView
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HomeScreenContract.View {
+class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<DeviceModelView>, HomeScreenContract.View {
 
     @Inject
     lateinit var mPresenter: HomeScreenContract.Presenter
@@ -29,8 +33,11 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
     @Inject
     lateinit var mPermissionsManager: PermissionsManager
 
+    @Inject
+    lateinit var deviceMapper: DeviceMapper
+
     private var devicesFound = false
-    private var deviceListAdapter: DeviceListAdapter = DeviceListAdapter()
+    private var deviceListAdapter: DeviceListAdapter = DeviceListAdapter(this)
 
     private val REQUEST_CODE_ENABLE_BT = 1001
 
@@ -78,6 +85,19 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
 
     override fun setPresenter(presenter: HomeScreenContract.Presenter) {
         this.mPresenter = presenter
+    }
+
+    override fun onDeviceAdded(device: Device) {
+        deviceListAdapter.updateDeviceStatus(deviceMapper.mapToView(device))
+    }
+
+    override fun onDeviceSelected(view: View, position: Int, model: DeviceModelView) {
+        Log.d("GrinBT", "Selected ${model.name} with address: ${model.address}...")
+    }
+
+    override fun onDeviceAdd(view: View, position: Int, model: DeviceModelView) {
+        Log.d("GrinBT", "Saving ${model.name} with address: ${model.address}...")
+        mPresenter.addDevice(deviceMapper.mapFromView(model))
     }
 
     private fun setupUi() {
@@ -143,10 +163,14 @@ class MainActivity : AppCompatActivity(), HomeScreenContract.View {
                     val deviceAddress = device.address // MAC address
                     val deviceSignalStrength = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE)
                     devicesFound = true
-                    deviceListAdapter.add(Device(
-                            deviceName,
-                            deviceAddress,
-                            deviceSignalStrength.toString()))
+                    deviceListAdapter.add(
+                            DeviceModelView(
+                                    name = deviceName,
+                                    address = deviceAddress,
+                                    signalStrength = deviceSignalStrength.toString(),
+                                    creationDate = Date()
+                            )
+                    )
                     Log.d("GrinBT", "Bluetooth device found. MacAddress: $deviceAddress, Name: $deviceName, RSSI: $deviceSignalStrength")
                 }
 

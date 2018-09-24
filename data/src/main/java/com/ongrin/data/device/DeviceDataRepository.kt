@@ -12,7 +12,9 @@ class DeviceDataRepository @Inject constructor(private val factory: DeviceDataSt
     override fun addDevice(device: Device): Single<Device> {
         return factory.retrieveDataStore()
                 .addDevice(mapper.mapToEntity(device))
-                .map { mapper.mapFromEntity(it) }
+                .map {
+                    mapper.mapFromEntity(it)
+                }
     }
 
     override fun getDevices(): Single<List<Device>> {

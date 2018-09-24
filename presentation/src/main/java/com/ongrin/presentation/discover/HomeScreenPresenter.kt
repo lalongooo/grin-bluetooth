@@ -20,7 +20,7 @@ class HomeScreenPresenter @Inject constructor(
     override fun addDevice(device: Device) {
         addDeviceUseCase.execute(object : DisposableSingleObserver<Device>() {
             override fun onSuccess(t: Device) {
-                println("GrinBT: Device added")
+                homeScreenView.onDeviceAdded(t)
             }
 
             override fun onError(e: Throwable) {
