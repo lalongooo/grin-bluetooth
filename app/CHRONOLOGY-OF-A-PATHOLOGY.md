@@ -113,14 +113,14 @@ Una vez que tenía disponible la lista de dispositivos, era necesario mostrar lo
 ### Conectar todo
 Ya con la lista de dispositivos disponible, era hora de conectar todas las capas para leer/guardar datos de la API. Desde aquí fué algo sencillo, era cuestion de implementar la lógica correspondiente en cada una de las capas de la arquitectura del proyecto.
 
-De hecho, me tomé el tiempo de construir una API para esta app, fué construida con node js/express y está corriendo en Heroku. El repo esta [aquí](https://github.com/lalongooo/grin-bluetooth-api). En el mismo repo están las credenciales de la base de datos MongoDB, es una instancia que corre 
+De hecho, me tomé el tiempo de construir una API para esta app, fué construida con node js/express y está corriendo en Heroku. El repo esta [aquí](https://github.com/lalongooo/grin-bluetooth-api). En el mismo repo están las credenciales de la base de datos MongoDB, es una instancia que corre en [mLab](https://mlab.com/)
 
 ### Adicionales
 Hubo una lista de cosas que quise implementar adicionalmente:
-- Agregué una opción mas par ordenar los dispositivos guardados en la API (fecha de creación, además de nombre)
+- Agregué una opción más para ordenar los dispositivos guardados en la API (fecha de creación, además de nombre)
 - Manejé los diferentes "estados" de los permisos al iniciar la app
   Los permisos pueden ser rechazados o totalmente negados (opción "Never ask again" del sistema). Para cuando el usuario decide no volver a pedir el permiso, se abren los "settings" de la app para que el usuario decida autorizar los permisos desde ahí
-- Traté de minimizar la interacción del usuario con varios botones, por ello la implementación de `SwipeRefreshLayout` y `FloatingActionButton` en la parte inferior derecha de ambas pantallas
+- Traté de minimizar la interacción del usuario con varios botones, por ello la implementación de [`SwipeRefreshLayout`](https://material.io/design/platform-guidance/android-swipe-to-refresh.html) y [`FloatingActionButton`](https://material.io/design/components/buttons-floating-action-button.html) en la parte inferior derecha de ambas pantallas
 - Mostré unos íconos que indican progreso cuando un dispositivo se esta guardando en la API. Una vez completado el proceso, se muestrá una "palomita verde"
 - Muestro un mensaje cuando no se detecta ningún dispositivo bluetooth disponible
 
