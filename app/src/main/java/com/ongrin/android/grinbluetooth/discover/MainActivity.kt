@@ -8,7 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import android.util.Log
 import android.view.View
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.browse.DeviceListActivity
+import com.ongrin.android.grinbluetooth.manager.GrinPreferenceManager
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
 import com.ongrin.domain.device.model.Device
 import com.ongrin.presentation.common.mapper.DeviceMapper
@@ -36,6 +39,9 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
     lateinit var mPermissionsManager: PermissionsManager
 
     @Inject
+    lateinit var grinPreferenceManager: GrinPreferenceManager
+
+    @Inject
     lateinit var deviceMapper: DeviceMapper
 
     private var devicesFound = false
@@ -49,13 +55,17 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         setupUi()
-        startBluetooth()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(mReceiver)
         mPresenter.stop()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startBluetooth()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -76,13 +86,7 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
                 && grantResults[COARSE_LOCATION_PERMISSION_ARRAY_INDEX] == PackageManager.PERMISSION_GRANTED) {
             startBluetooth()
         } else {
-            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.require_location_permission, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.snack_bar_action_ask_permission) {
-                        mPermissionsManager.showLocationPermissionsDialog(
-                                this, PermissionsManager.LOCATION_PERMISSION_REQUEST_CODE
-                        )
-                    }
-                    .show()
+            showPermissionSnackBar()
         }
     }
 
@@ -103,7 +107,13 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
     }
 
     private fun setupUi() {
+        // Initialize swipeRefreshLayout state
         swipeRefreshLayout.setOnRefreshListener { startBluetooth() }
+        if (swipeRefreshLayout.isRefreshing) {
+            swipeRefreshLayout.isRefreshing = false
+        }
+
+        // Initialize recyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = deviceListAdapter
 
@@ -130,7 +140,16 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
                 startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BT)
             }
         } else {
-            mPermissionsManager.showLocationPermissionsDialog(this, PermissionsManager.LOCATION_PERMISSION_REQUEST_CODE)
+            val permissionsDenied = (!(mPermissionsManager.shouldExplainLocationPermission(this)
+                    && grinPreferenceManager.hasLocationPermissionBeenRequested())
+                    && !mPermissionsManager.shouldExplainLocationPermission(this)
+                    && grinPreferenceManager.hasLocationPermissionBeenRequested())
+            if (permissionsDenied) {
+                showPermissionSnackBar()
+            } else {
+                grinPreferenceManager.setLocationPermissionHasBeenRequested()
+                mPermissionsManager.showLocationPermissionsDialog(this, PermissionsManager.LOCATION_PERMISSION_REQUEST_CODE)
+            }
         }
     }
 
@@ -158,8 +177,37 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
         }
     }
 
-    private val mReceiver = object : BroadcastReceiver() {
+    private fun disableBluetoothFeature() {
+        if (swipeRefreshLayout.isRefreshing) {
+            swipeRefreshLayout.isRefreshing = false
+        }
+        Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.no_bluetooth, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snack_bar_action_enable_bt) { startBluetooth() }
+                .show()
+    }
 
+    private fun showPermissionSnackBar() {
+        Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.require_location_permission, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snack_bar_action_ask_permission) {
+
+                    val permissionsDenied = (
+                            !(mPermissionsManager.shouldExplainLocationPermission(this)
+                                    && grinPreferenceManager.hasLocationPermissionBeenRequested()
+                                    )
+                                    && !mPermissionsManager.shouldExplainLocationPermission(this)
+                                    && grinPreferenceManager.hasLocationPermissionBeenRequested())
+                    if (permissionsDenied) {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    } else {
+                        mPermissionsManager.showLocationPermissionsDialog(this, PermissionsManager.LOCATION_PERMISSION_REQUEST_CODE)
+                    }
+                }
+                .show()
+    }
+
+    private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             when (action) {
@@ -196,14 +244,5 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
                 }
             }
         }
-    }
-
-    private fun disableBluetoothFeature() {
-        if (swipeRefreshLayout.isRefreshing) {
-            swipeRefreshLayout.isRefreshing = false
-        }
-        Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.no_bluetooth, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snack_bar_action_enable_bt) { startBluetooth() }
-                .show()
     }
 }
