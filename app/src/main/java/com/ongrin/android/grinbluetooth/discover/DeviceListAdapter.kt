@@ -27,7 +27,6 @@ class DeviceListAdapter constructor(private val listener: ClickListener<DeviceMo
         deviceViewHolder.mBinding.deviceName.text = device.name
         deviceViewHolder.mBinding.deviceAddress.text = device.address
         deviceViewHolder.mBinding.deviceSignalStrength.text = device.signalStrength
-        deviceViewHolder.mBinding.deviceCreationDate.text = if (device.creationDate == null) "" else device.creationDate?.toSimpleString()
         deviceViewHolder.mBinding.btnSave.setImageResource(R.drawable.ic_add)
 
         if (device.id != null) {

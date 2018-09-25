@@ -34,24 +34,50 @@
             tools:text="AWESOME BLUETOOTH DEVICE" />
 
         <TextView
+            android:id="@+id/deviceAddressLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/device_address"
+            android:textSize="@dimen/device_list_info_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/deviceName"
+            app:layout_constraintTop_toBottomOf="@+id/deviceName" />
+
+        <TextView
             android:id="@+id/deviceAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/device_list_info_detail_margin"
+            android:layout_marginStart="@dimen/device_list_info_detail_margin"
             android:textSize="@dimen/device_list_info_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/deviceName"
-            app:layout_constraintTop_toBottomOf="@+id/deviceName"
+            app:layout_constraintBottom_toBottomOf="@+id/deviceAddressLabel"
+            app:layout_constraintStart_toEndOf="@+id/deviceAddressLabel"
+            app:layout_constraintTop_toTopOf="@+id/deviceAddressLabel"
             tools:text="00:11:22:33:FF:EE" />
+
+        <TextView
+            android:id="@+id/deviceSignalStrengthLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/device_list_info_detail_margin"
+            android:layout_marginStart="@dimen/device_list_info_detail_margin"
+            android:text="@string/device_signal_strength"
+            android:textSize="@dimen/device_list_info_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/deviceAddress"
+            app:layout_constraintStart_toEndOf="@+id/deviceAddress"
+            app:layout_constraintTop_toTopOf="@+id/deviceAddress" />
 
         <TextView
             android:id="@+id/deviceSignalStrength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/device_list_info_margin"
-            android:layout_marginStart="@dimen/device_list_info_margin"
+            android:layout_marginLeft="@dimen/device_list_info_detail_margin"
+            android:layout_marginStart="@dimen/device_list_info_detail_margin"
             android:textSize="@dimen/device_list_info_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/deviceAddress"
-            app:layout_constraintStart_toEndOf="@+id/deviceAddress"
+            app:layout_constraintStart_toEndOf="@+id/deviceSignalStrengthLabel"
             app:layout_constraintTop_toTopOf="@+id/deviceAddress"
             tools:text="-40db" />
 
@@ -59,11 +85,11 @@
             android:id="@+id/deviceCreationDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/device_list_info_margin"
-            android:layout_marginStart="@dimen/device_list_info_margin"
+            android:layout_marginEnd="@dimen/device_list_item_margin"
+            android:layout_marginRight="@dimen/device_list_item_margin"
             android:textSize="@dimen/device_list_info_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/deviceAddress"
-            app:layout_constraintStart_toEndOf="@+id/deviceSignalStrength"
+            app:layout_constraintEnd_toStartOf="@+id/btnSave"
             app:layout_constraintTop_toTopOf="@+id/deviceAddress"
             tools:text="Created on Jan 18 2018 at 12:34" />
 

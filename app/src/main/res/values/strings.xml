@@ -10,4 +10,6 @@
     <string name="sort_option_title">Sort by</string>
     <string name="sort_option_name">Name</string>
     <string name="sort_option_create_date">Creation date</string>
+    <string name="device_address">Address:</string>
+    <string name="device_signal_strength">dBm:</string>
 </resources>
