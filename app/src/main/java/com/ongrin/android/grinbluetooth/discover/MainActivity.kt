@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(mReceiver)
+        mPresenter.stop()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
                 && grantResults[COARSE_LOCATION_PERMISSION_ARRAY_INDEX] == PackageManager.PERMISSION_GRANTED) {
             startBluetooth()
         } else {
-            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.searching_devices, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.require_location_permission, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.snack_bar_action_ask_permission) {
                         mPermissionsManager.showLocationPermissionsDialog(
                                 this, PermissionsManager.LOCATION_PERMISSION_REQUEST_CODE
@@ -198,6 +199,9 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
     }
 
     private fun disableBluetoothFeature() {
+        if (swipeRefreshLayout.isRefreshing) {
+            swipeRefreshLayout.isRefreshing = false
+        }
         Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.no_bluetooth, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snack_bar_action_enable_bt) { startBluetooth() }
                 .show()
