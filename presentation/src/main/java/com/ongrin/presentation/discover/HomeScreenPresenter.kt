@@ -2,7 +2,7 @@ package com.ongrin.presentation.discover
 
 import com.ongrin.domain.device.model.Device
 import com.ongrin.domain.interactor.SingleUseCase
-import com.ongrin.presentation.discover.mapper.DeviceMapper
+import com.ongrin.presentation.common.mapper.DeviceMapper
 import io.reactivex.observers.DisposableSingleObserver
 import javax.inject.Inject
 

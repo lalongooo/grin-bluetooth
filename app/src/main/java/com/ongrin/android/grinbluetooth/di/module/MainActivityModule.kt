@@ -5,9 +5,9 @@ import com.ongrin.android.grinbluetooth.di.scope.ActivityScope
 import com.ongrin.android.grinbluetooth.discover.MainActivity
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
 import com.ongrin.domain.device.interactor.AddDevice
+import com.ongrin.presentation.common.mapper.DeviceMapper
 import com.ongrin.presentation.discover.HomeScreenContract
 import com.ongrin.presentation.discover.HomeScreenPresenter
-import com.ongrin.presentation.discover.mapper.DeviceMapper
 import dagger.Module
 import dagger.Provides
 

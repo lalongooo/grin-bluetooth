@@ -1,4 +1,4 @@
-package com.ongrin.presentation.discover.model
+package com.ongrin.presentation.common.model
 
 import java.util.Date
 

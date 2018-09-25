@@ -1,8 +1,8 @@
-package com.ongrin.presentation.discover.mapper
+package com.ongrin.presentation.common.mapper
 
 import com.ongrin.domain.device.model.Device
 import com.ongrin.presentation.BaseMapper
-import com.ongrin.presentation.discover.model.DeviceModelView
+import com.ongrin.presentation.common.model.DeviceModelView
 import javax.inject.Inject
 
 class DeviceMapper @Inject constructor() : BaseMapper<DeviceModelView, Device> {

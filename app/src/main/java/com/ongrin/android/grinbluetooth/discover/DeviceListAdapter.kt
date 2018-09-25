@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.databinding.RecyclerViewDeviceListItemBinding
 import com.ongrin.android.grinbluetooth.extensions.toSimpleString
-import com.ongrin.presentation.discover.model.DeviceModelView
+import com.ongrin.presentation.common.model.DeviceModelView
 import java.util.*
 
 class DeviceListAdapter constructor(private val listener: ClickListener<DeviceModelView>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
