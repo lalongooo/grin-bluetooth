@@ -1,6 +1,6 @@
 # Grin Scooters Blueooth
 
-Sample app to demonstrate nearby bluetooth devices. Direct APK download [here](https://www.dropbox.com/s/vc9eppxp9pcgy4y/app-debug.apk)).
+Sample app to demonstrate nearby bluetooth devices. Direct APK download [here](https://www.dropbox.com/s/vc9eppxp9pcgy4y/app-debug.apk).
 
 It uses kotlin & the following libraries:
 
