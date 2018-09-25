@@ -130,5 +130,10 @@ Hubo una lista de cosas que quise implementar adicionalmente:
   - values-hdpi/dimens.xml
   - values-xhhdpi/dimens.xml
   - etc
+- Implementar [Room](https://developer.android.com/topic/libraries/architecture/room) para guardar la lista de dispositivos guardados en la API. Fué por ello que la clase [`CacheImpl`](https://github.com/lalongooo/grin-bluetooth/blob/master/cache/src/main/java/com/ongrin/cache/DeviceCacheImpl.kt) no tiene implementación. Funcionaría así:
+    - Hacer el request `GET /devices`
+    - Guardar la respuesta en una base de datos SQLite local usando [Room](https://developer.android.com/topic/libraries/architecture/room)
+    - Al abrir la segunda pantalla, cargar los datos guardados en la base de datos SQLite local (cache)
+    - Al hacer el gesture "pull-down-to-refresh", hacer el request a `GET /devices` de nuevo y reemplazar los datos en cache
 - Implementar pruebas de integración con Espresso
 - Implementar continuous integration con GitLab, dado que el repo está hosteado en GitHub, ya no tuve tiempo para configurar el CI de GitLAb
