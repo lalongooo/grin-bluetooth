@@ -15,15 +15,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import com.ongrin.android.grinbluetooth.R
+import com.ongrin.android.grinbluetooth.browse.DeviceListActivity
 import com.ongrin.android.grinbluetooth.manager.PermissionsManager
 import com.ongrin.domain.device.model.Device
+import com.ongrin.presentation.common.mapper.DeviceMapper
+import com.ongrin.presentation.common.model.DeviceModelView
 import com.ongrin.presentation.discover.HomeScreenContract
-import com.ongrin.presentation.discover.mapper.DeviceMapper
-import com.ongrin.presentation.discover.model.DeviceModelView
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<DeviceModelView>, HomeScreenContract.View {
 
@@ -105,7 +107,8 @@ class MainActivity : AppCompatActivity(), DeviceListAdapter.ClickListener<Device
         recyclerView.adapter = deviceListAdapter
 
         fab.setOnClickListener {
-            Log.d("GrinBT", "Bo to remote device list")
+            val intent = Intent(this, DeviceListActivity::class.java)
+            startActivity(intent)
         }
     }
 

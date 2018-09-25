@@ -6,4 +6,7 @@
     <string name="snack_bar_action_enable_bt">Enable bluetooth</string>
     <string name="snack_bar_action_ask_permission">Enable location permission</string>
     <string name="no_devices_found">No bluetooth devices found</string>
+    <string name="sort_option_title">Sort by</string>
+    <string name="sort_option_name">Name</string>
+    <string name="sort_option_create_date">Creation date</string>
 </resources>
