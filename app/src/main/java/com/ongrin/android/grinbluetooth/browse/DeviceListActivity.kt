@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.ongrin.android.grinbluetooth.R
 import com.ongrin.android.grinbluetooth.databinding.LayoutBottomSheetSortOptionsBinding
 import com.ongrin.domain.device.model.Device
@@ -28,6 +27,7 @@ class DeviceListActivity : AppCompatActivity(), DeviceListContract.View {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_list)
+        setSupportActionBar(toolbar)
         setUpUi()
         getDeviceList()
     }
@@ -36,6 +36,10 @@ class DeviceListActivity : AppCompatActivity(), DeviceListContract.View {
         swipeRefreshLayout.setOnRefreshListener { mPresenter.getDeviceList() }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = deviceListAdapter
+        title = getString(R.string.device_list)
+
+        var sortByNameAscending = true
+        var sortByDateAscending = true
 
         fab.setOnClickListener {
             val mBottomSheetDialog = BottomSheetDialog(this)
@@ -43,12 +47,14 @@ class DeviceListActivity : AppCompatActivity(), DeviceListContract.View {
 
             sheetView.sortOptionName.setOnClickListener { _ ->
                 mBottomSheetDialog.dismiss()
-                Log.d("GrinBT", "Sort by name")
+                deviceListAdapter.sortByName(sortByNameAscending)
+                sortByNameAscending = !sortByNameAscending
             }
 
             sheetView.sortOptionCreationDate.setOnClickListener { _ ->
                 mBottomSheetDialog.dismiss()
-                Log.d("GrinBT", "Sort by date")
+                deviceListAdapter.sortByDate(sortByDateAscending)
+                sortByDateAscending = !sortByDateAscending
             }
 
             mBottomSheetDialog.setContentView(sheetView.root)

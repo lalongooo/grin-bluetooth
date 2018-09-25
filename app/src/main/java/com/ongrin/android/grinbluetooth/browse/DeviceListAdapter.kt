@@ -10,6 +10,7 @@ import com.ongrin.android.grinbluetooth.databinding.RecyclerViewDeviceListItemBi
 import com.ongrin.android.grinbluetooth.extensions.toSimpleString
 import com.ongrin.presentation.common.model.DeviceModelView
 import java.util.*
+import kotlin.Comparator
 
 class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val deviceList: ArrayList<DeviceModelView> = ArrayList()
@@ -46,12 +47,30 @@ class DeviceListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun updateDeviceStatus(device: DeviceModelView) {
-        val index = deviceList.indexOfFirst {
-            it.address == device.address
-        }
-        deviceList[index] = device
-        notifyItemChanged(index)
+    fun sortByName(ascending: Boolean) {
+        deviceList.sortWith(
+                Comparator { o1, o2 ->
+                    if (ascending) {
+                        o1.name!!.compareTo(o2.name!!, true)
+                    } else {
+                        o2.name!!.compareTo(o1.name!!, true)
+                    }
+                }
+        )
+        notifyDataSetChanged()
+    }
+
+    fun sortByDate(ascending: Boolean) {
+        deviceList.sortWith(
+                Comparator { o1, o2 ->
+                    if (ascending) {
+                        o2.name!!.compareTo(o1.name!!)
+                    } else {
+                        o1.name!!.compareTo(o2.name!!)
+                    }
+                }
+        )
+        notifyDataSetChanged()
     }
 
     fun clear() {
